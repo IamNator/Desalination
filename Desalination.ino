@@ -1,3 +1,11 @@
+
+/*  
+*  AUTHOR: NATOR VERINUMBE
+*  DATE: 11/05/2020
+*  DESCRIPTION: This code is part of a larger project, dropping this here for future reference
+*/
+
+
 #define WL_RESERVE_SENSOR_ECHO A0//Water Level Reserve (digital Input)
 #define WL_STORAGE_SENSOR_ECHO A2//Water Level Storage (digital Input)
 
