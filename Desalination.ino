@@ -34,8 +34,10 @@
 #define WLB_EMPTY 0 //When Boiler is empty
 #define WLB_NORMAL -1 //When it's neither full not empty
 
-float time, distance = 0; 
-int isfull = 0
+float time = 0;
+float distance = 0; 
+int isfull = 0;
+bool isBoilerFull = false;
 
 void setup() {
   // put your setup code here, to run once:
@@ -67,8 +69,11 @@ void loop() {
     digitalWrite(PUMP_TO_RESERVE, LOW);
   }
 //ERROR--needs adjustments
-  if ( (WLBoiler() != WLB_FULL) && ( (BoilerTemp() < 95) || (WLBoiler() == WLB_EMPTY) )  ){ //Tank is only filled up when it's empty
+  if ( (WLBoiler() == WLB_EMPTY) ||  !(isBoilerFull)  ){ //Tank is only filled up when it's empty
     digitalWrite(VALVE_TO_BOILER, HIGH);
+    if (WLBoiler() == WLB_FULL){
+     isBoilerFull = true; 
+    }
   } else {
     digitalWrite(VALVE_TO_BOILER, LOW);
   }
