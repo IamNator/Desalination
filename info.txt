@@ -1,0 +1,5 @@
+0. TURN ON
+1. Check WL_RESERVE_SENSOR for water levels, if low turn pump_sea on, else nothing
+2. check WL_BOILER_LOW is on then turn on VALVE_TO_BOILER, goes off when WL_BOILER_HIGH is on
+3. check BOILER_TEMP if below 95C and BOILER not empty, turns on heater else heater goes off or stays off
+4. PUMP_STORAGE goes on when TEMP is above 95 and WL_STORAGE_SENSOR is not full.
