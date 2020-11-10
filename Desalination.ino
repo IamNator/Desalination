@@ -35,8 +35,15 @@
 #define WLB_NORMAL 56 //When it's neither full not empty
 
 
+<<<<<<< HEAD
 // int isfull = 0;
 bool isNotBoilerFull = true;
+=======
+float time = 0;
+float distance = 0; 
+int isfull = 0;
+bool isBoilerFull = false;
+>>>>>>> 2c002f8f15dc34495d38e5577464b385d22cc4b7
 
 void setup() {
   // put your setup code here, to run once:
@@ -77,7 +84,24 @@ void loop() {
   } else {
     digitalWrite(PUMP_TO_RESERVE, LOW);
   }
+<<<<<<< HEAD
   
+=======
+//ERROR--needs adjustments
+  if ( (WLBoiler() == WLB_EMPTY) ||  !(isBoilerFull)  ){ //Tank is only filled up when it's empty
+    digitalWrite(VALVE_TO_BOILER, HIGH);
+    if (WLBoiler() == WLB_FULL){
+     isBoilerFull = true; 
+    }
+  } else {
+    digitalWrite(VALVE_TO_BOILER, LOW);
+  }
+
+  int wl_boiler = WLBoiler();
+  int boiler_temp = BoilerTemp();
+  Serial.print("WLBoiler : ");
+  Serial.println(wl_boiler);
+>>>>>>> 2c002f8f15dc34495d38e5577464b385d22cc4b7
 
 // //*****************************For Filling up Boiler Tank when Empty****************
 //   if ( wl_boiler == WLB_EMPTY){
