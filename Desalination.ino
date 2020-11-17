@@ -137,6 +137,7 @@ void printValues(Sensor * sensor){
 
 
 uint8_t BoilerTemp(){
+  
   uint8_t temp = 0;
   temp = ( analogRead(TEMP_SENSOR) - 32 ) / 1.8 ; //Reads and converts from farenheit to celcius
   return temp; 
