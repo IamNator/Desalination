@@ -39,6 +39,12 @@ float distance = 0;
 int isfull = 0;
 bool isBoilerFull = false;
 
+
+ volatile int WL_reserve;
+ volatile int WL_boiler;
+ volatile int boiler_temp;
+ volatile int wl_storage;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(BAUD);
@@ -61,10 +67,10 @@ void setup() {
 }
 
 void loop() {
-  int WL_reserve = WLReserve();
-  int WL_boiler = WLBoiler();
-  int boiler_temp = BoilerTemp();
-  int wl_storage = WLStorage();
+  WL_reserve = WLReserve();
+  WL_boiler = WLBoiler();
+  boiler_temp = BoilerTemp();
+  wl_storage = WLStorage();
   
   //*******************Fills up Salt water Reserve*******************
   if (WL_reserve < WLR_FULL){
