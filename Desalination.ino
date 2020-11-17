@@ -39,11 +39,15 @@ float distance = 0;
 int isfull = 0;
 bool isBoilerFull = false;
 
+typedef struct Sensor{
+  volatile int WL_reserve;
+  volatile int WL_boiler;
+  volatile int boiler_temp;
+  volatile int WL_storage;
+} Sensor;
 
- volatile int WL_reserve;
- volatile int WL_boiler;
- volatile int boiler_temp;
- volatile int wl_storage;
+Sensor sensor;
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -63,26 +67,30 @@ void setup() {
   pinMode(VALVE_TO_BOILER, OUTPUT); //digital Output
   pinMode(PUMP_TO_MEMBRANE, OUTPUT); //digital Output
   pinMode(BOILER, OUTPUT);//digital Output
+
   
 }
 
 void loop() {
-  WL_reserve = WLReserve();
-  WL_boiler = WLBoiler();
-  boiler_temp = BoilerTemp();
-  wl_storage = WLStorage();
+
+  sensor.WL_reserve = WLReserve();
+  sensor.WL_boiler = WLBoiler();
+  sensor.boiler_temp = BoilerTemp();
+  sensor.WL_storage = WLStorage();
+
+  printValues(&sensor); //Prints values to Serial monitor
   
   //*******************Fills up Salt water Reserve*******************
-  if (WL_reserve < WLR_FULL){
+  if (sensor.WL_reserve < WLR_FULL){
     digitalWrite(PUMP_TO_RESERVE, HIGH);
   } else {
     digitalWrite(PUMP_TO_RESERVE, LOW);
   }
   
 //*********************Fills up water Boiler****************************
-  if ( (WL_boiler == WLB_EMPTY) ||  !(isBoilerFull)  ){ //Tank is only filled up when it's empty
+  if ( (sensor.WL_boiler == WLB_EMPTY) ||  !(isBoilerFull)  ){ //Tank is only filled up when it's empty
     digitalWrite(VALVE_TO_BOILER, HIGH);
-    if (WL_boiler == WLB_FULL){
+    if (sensor.WL_boiler == WLB_FULL){
      isBoilerFull = true; 
     }
   } else {
@@ -90,22 +98,19 @@ void loop() {
   }
 
 
-//**************************Maintains Boiler Temperature***********************
+//***********************Maintains Boiler Temperature***********************
   
- 
-  Serial.print("WLBoiler : ");
-  Serial.println(wl_boiler);
 
   Serial.print("Boiler Temp : ");
-  Serial.println(boiler_temp);
-  if( (WL_boiler != WLB_EMPTY) && (boiler_temp < 95) ){
+  Serial.println(sensor.boiler_temp);
+  if( (sensor.WL_boiler != WLB_EMPTY) && (sensor.boiler_temp < 95) ){
     digitalWrite(BOILER, HIGH);
   } else {
     digitalWrite(BOILER, LOW);
   }
 
 //**********************Fills up Storage Tank********************
-  if( boiler_temp >= 95) && (wl_storage < WLS_FULL) && (WL_boiler != WLB_EMPTY) ){
+  if( (sensor.boiler_temp >= 95) && (sensor.WL_storage < WLS_FULL) && (sensor.WL_boiler != WLB_EMPTY) ){
      digitalWrite(PUMP_TO_MEMBRANE, HIGH);
   } else {
     digitalWrite(PUMP_TO_MEMBRANE, LOW);
@@ -116,6 +121,20 @@ void loop() {
 
 
 //############################################## --- FUNCTION DEFINITION --- ##########################################
+
+void printValues(Sensor * sensor){
+
+  Serial.print("WL_reserve : ");
+  Serial.println(sensor->WL_reserve);
+  Serial.print("WL_boiler : ");
+  Serial.println(sensor->WL_boiler);
+  Serial.print("boiler_temp : ");
+  Serial.println(sensor->boiler_temp);
+  Serial.print("wl_storage : ");
+  Serial.println(sensor->WL_storage);
+
+}
+
 
 uint8_t BoilerTemp(){
   uint8_t temp = 0;
