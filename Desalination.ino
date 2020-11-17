@@ -1,6 +1,6 @@
 
 /*  
-*  AUTHOR: NATOR VERINUMBE
+*  AUTHOR: NATOR VERINUMBE 
 *  DATE: 11/05/2020
 *  DESCRIPTION: This code is part of a larger project, dropping this here for future reference
 */
@@ -61,37 +61,45 @@ void setup() {
 }
 
 void loop() {
+  int WL_reserve = WLReserve();
+  int WL_boiler = WLBoiler();
+  int boiler_temp = BoilerTemp();
+  int wl_storage = WLStorage();
   
-  // put your main code here, to run repeatedly:
-  if (WLReserve() < WLR_FULL){
+  //*******************Fills up Salt water Reserve*******************
+  if (WL_reserve < WLR_FULL){
     digitalWrite(PUMP_TO_RESERVE, HIGH);
   } else {
     digitalWrite(PUMP_TO_RESERVE, LOW);
   }
-//ERROR FIXED
-  if ( (WLBoiler() == WLB_EMPTY) ||  !(isBoilerFull)  ){ //Tank is only filled up when it's empty
+  
+//*********************Fills up water Boiler****************************
+  if ( (WL_boiler == WLB_EMPTY) ||  !(isBoilerFull)  ){ //Tank is only filled up when it's empty
     digitalWrite(VALVE_TO_BOILER, HIGH);
-    if (WLBoiler() == WLB_FULL){
+    if (WL_boiler == WLB_FULL){
      isBoilerFull = true; 
     }
   } else {
     digitalWrite(VALVE_TO_BOILER, LOW);
   }
 
-  int wl_boiler = WLBoiler();
-  int boiler_temp = BoilerTemp();
+
+//**************************Maintains Boiler Temperature***********************
+  
+ 
   Serial.print("WLBoiler : ");
   Serial.println(wl_boiler);
 
   Serial.print("Boiler Temp : ");
   Serial.println(boiler_temp);
-  if( (wl_boiler != WLB_EMPTY) && (boiler_temp < 95) ){
+  if( (WL_boiler != WLB_EMPTY) && (boiler_temp < 95) ){
     digitalWrite(BOILER, HIGH);
   } else {
     digitalWrite(BOILER, LOW);
   }
-  
-  if( (BoilerTemp() >= 95) && (WLStorage() < WLS_FULL) && (WLBoiler() != WLB_EMPTY) ){
+
+//**********************Fills up Storage Tank********************
+  if( boiler_temp >= 95) && (wl_storage < WLS_FULL) && (WL_boiler != WLB_EMPTY) ){
      digitalWrite(PUMP_TO_MEMBRANE, HIGH);
   } else {
     digitalWrite(PUMP_TO_MEMBRANE, LOW);
@@ -99,7 +107,9 @@ void loop() {
 
 }
 
-//***********************************************************************FUNCTION DEFINITION********************************************
+
+
+//############################################## --- FUNCTION DEFINITION --- ##########################################
 
 uint8_t BoilerTemp(){
   uint8_t temp = 0;
