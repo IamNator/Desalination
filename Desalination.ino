@@ -100,9 +100,6 @@ void loop() {
 
 //***********************Maintains Boiler Temperature***********************
   
-
-  Serial.print("Boiler Temp : ");
-  Serial.println(sensor.boiler_temp);
   if( (sensor.WL_boiler != WLB_EMPTY) && (sensor.boiler_temp < 95) ){
     digitalWrite(BOILER, HIGH);
   } else {
@@ -132,6 +129,7 @@ void printValues(Sensor * sensor){
   Serial.println(sensor->boiler_temp);
   Serial.print("wl_storage : ");
   Serial.println(sensor->WL_storage);
+  Serial.println("*****************************\n");
 
 }
 
